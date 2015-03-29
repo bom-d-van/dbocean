@@ -23,10 +23,82 @@ type asset struct {
 	info  os.FileInfo
 }
 
-// ui_react_js reads file data from disk. It returns an error on failure.
-func ui_react_js() (*asset, error) {
-	path := filepath.Join(rootDir, "ui/react.js")
-	name := "ui/react.js"
+// ui_app_css reads file data from disk. It returns an error on failure.
+func ui_app_css() (*asset, error) {
+	path := filepath.Join(rootDir, "ui/app.css")
+	name := "ui/app.css"
+	bytes, err := bindata_read(path, name)
+	if err != nil {
+		return nil, err
+	}
+
+	fi, err := os.Stat(path)
+	if err != nil {
+		err = fmt.Errorf("Error reading asset info %s at %s: %v", name, path, err)
+	}
+
+	a := &asset{bytes: bytes, info: fi}
+	return a, err
+}
+
+// ui_app_html reads file data from disk. It returns an error on failure.
+func ui_app_html() (*asset, error) {
+	path := filepath.Join(rootDir, "ui/app.html")
+	name := "ui/app.html"
+	bytes, err := bindata_read(path, name)
+	if err != nil {
+		return nil, err
+	}
+
+	fi, err := os.Stat(path)
+	if err != nil {
+		err = fmt.Errorf("Error reading asset info %s at %s: %v", name, path, err)
+	}
+
+	a := &asset{bytes: bytes, info: fi}
+	return a, err
+}
+
+// ui_app_js reads file data from disk. It returns an error on failure.
+func ui_app_js() (*asset, error) {
+	path := filepath.Join(rootDir, "ui/app.js")
+	name := "ui/app.js"
+	bytes, err := bindata_read(path, name)
+	if err != nil {
+		return nil, err
+	}
+
+	fi, err := os.Stat(path)
+	if err != nil {
+		err = fmt.Errorf("Error reading asset info %s at %s: %v", name, path, err)
+	}
+
+	a := &asset{bytes: bytes, info: fi}
+	return a, err
+}
+
+// ui_lib_css reads file data from disk. It returns an error on failure.
+func ui_lib_css() (*asset, error) {
+	path := filepath.Join(rootDir, "ui/lib.css")
+	name := "ui/lib.css"
+	bytes, err := bindata_read(path, name)
+	if err != nil {
+		return nil, err
+	}
+
+	fi, err := os.Stat(path)
+	if err != nil {
+		err = fmt.Errorf("Error reading asset info %s at %s: %v", name, path, err)
+	}
+
+	a := &asset{bytes: bytes, info: fi}
+	return a, err
+}
+
+// ui_lib_js reads file data from disk. It returns an error on failure.
+func ui_lib_js() (*asset, error) {
+	path := filepath.Join(rootDir, "ui/lib.js")
+	name := "ui/lib.js"
 	bytes, err := bindata_read(path, name)
 	if err != nil {
 		return nil, err
@@ -93,7 +165,11 @@ func AssetNames() []string {
 
 // _bindata is a table, holding each asset generator, mapped to its name.
 var _bindata = map[string]func() (*asset, error){
-	"ui/react.js": ui_react_js,
+	"ui/app.css": ui_app_css,
+	"ui/app.html": ui_app_html,
+	"ui/app.js": ui_app_js,
+	"ui/lib.css": ui_lib_css,
+	"ui/lib.js": ui_lib_js,
 }
 
 // AssetDir returns the file names below a certain
@@ -137,7 +213,15 @@ type _bintree_t struct {
 }
 var _bintree = &_bintree_t{nil, map[string]*_bintree_t{
 	"ui": &_bintree_t{nil, map[string]*_bintree_t{
-		"react.js": &_bintree_t{ui_react_js, map[string]*_bintree_t{
+		"app.css": &_bintree_t{ui_app_css, map[string]*_bintree_t{
+		}},
+		"app.html": &_bintree_t{ui_app_html, map[string]*_bintree_t{
+		}},
+		"app.js": &_bintree_t{ui_app_js, map[string]*_bintree_t{
+		}},
+		"lib.css": &_bintree_t{ui_lib_css, map[string]*_bintree_t{
+		}},
+		"lib.js": &_bintree_t{ui_lib_js, map[string]*_bintree_t{
 		}},
 	}},
 }}

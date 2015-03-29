@@ -1,0 +1,15 @@
+{{define "app"}}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>DB Ocean</title>
+	<link rel="stylesheet" type="text/css" href="/ui/lib.css?{{now.UnixNano}}">
+	<link rel="stylesheet" type="text/css" href="/ui/app.css?{{now.UnixNano}}">
+	<script src="/ui/lib.js?{{now.UnixNano}}"></script>
+	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/0.3.1/showdown.min.js"></script> -->
+</head>
+<body id="content">
+	<script src="/ui/app.js?{{now.UnixNano}}"></script>
+</body>
+</html>
+{{end}}

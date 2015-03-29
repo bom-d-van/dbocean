@@ -1,0 +1,38 @@
+.app {
+	height: 100%;
+	width: 100%;
+}
+
+.db-list {
+	// background-color: black;
+	border: 1px solid #333;
+	width: 20%;
+	height: 100%;
+	float: left;
+}
+
+.data-panel {
+	// background-color: #333;
+	border: 1px solid #333;
+	width: 80%;
+	float: right;
+	height: 70%;
+}
+
+.console {
+	// background-color: red;
+	border: 1px solid #333;
+	height: 30%;
+	width: 80%;
+	float: right;
+
+	.log {
+		height: 50%;
+		width: 100%;
+	}
+
+	.input {
+		height: 50%;
+		width: 100%;
+	}
+}
