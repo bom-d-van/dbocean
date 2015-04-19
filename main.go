@@ -25,6 +25,11 @@ func main() {
 	mux.Get("/", http.HandlerFunc(home))
 	mux.Get("/ui/", http.FileServer(&assetfs.AssetFS{Asset: Asset, AssetDir: AssetDir}))
 
+	mux.Get("/dbs", http.HandlerFunc(getDBs))
+	mux.Post("/db", http.HandlerFunc(addDB))
+	mux.Del("/db", http.HandlerFunc(removeDB))
+	mux.Post("/db/exec", http.HandlerFunc(execCmd))
+
 	http.Handle("/", mux)
 	println("Listening on :9000")
 	err := http.ListenAndServe(":9000", nil)
