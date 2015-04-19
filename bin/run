@@ -8,9 +8,13 @@ function run_gulp {
 	done
 }
 
+
 run_gulp &
+
+gulp_pid=$(echo $!)
+trap "kill $gulp_pid; pkill gulp; exit" SIGINT
 
 while sleep 1; do
 	# ls src/*.rb | entr -d rake
-	find . -iname '*.go' | entr -dr ./run_app.sh
+	find . ../sqlkungfu -iname '*.go' | entr -dr rungoapp.sh dbocean
 done
