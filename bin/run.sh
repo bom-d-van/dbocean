@@ -8,7 +8,6 @@ function run_gulp {
 	done
 }
 
-
 run_gulp &
 
 gulp_pid=$(echo $!)
