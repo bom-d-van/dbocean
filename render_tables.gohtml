@@ -1,0 +1,12 @@
+@{
+	var info DBInfo
+	var tables []map[string]string
+}
+
+<ul>
+	@for _, table := range tables {
+		<li>
+			<a href="/dbs/@info.ID/tables/@table["name"]">@table["name"]</a>
+		</li>
+	}
+</ul>

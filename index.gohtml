@@ -1,0 +1,17 @@
+@{
+	import (
+	)
+	var infos []DBInfo
+}
+
+@for _, info := range infos {
+	<a href="/dbs/@info.ID">@info.Name</a>
+}
+
+<form method="POST" action="/dbs">
+	<p>create a new database</p>
+	<div>
+		<textarea></textarea>
+	</div>
+	<button>save</button>
+</form>

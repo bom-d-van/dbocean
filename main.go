@@ -2,10 +2,12 @@ package main
 
 import (
 	"bytes"
+	"fmt"
 	"html/template"
 	"io"
 	"log"
 	"net/http"
+	"os"
 	"runtime/debug"
 	"strings"
 	"time"
@@ -17,7 +19,7 @@ import (
 var (
 	rootDir = ""
 	tmpl    = loadTmpl()
-	devMode = true
+	devMode = os.Getenv("ENV") != "prod"
 )
 
 func main() {
@@ -25,13 +27,17 @@ func main() {
 	mux.Get("/", http.HandlerFunc(home))
 	mux.Get("/ui/", http.FileServer(&assetfs.AssetFS{Asset: Asset, AssetDir: AssetDir}))
 
-	mux.Get("/dbs", http.HandlerFunc(getDBs))
-	mux.Post("/db", http.HandlerFunc(addDB))
-	mux.Del("/db", http.HandlerFunc(removeDB))
-	mux.Post("/db/exec", http.HandlerFunc(execCmd))
+	mux.Get("/dbs", handlerWrap(listDBs))
+	mux.Post("/dbs", handlerWrap(addDB))
+	mux.Del("/dbs/:id", handlerWrap(removeDB))
+
+	mux.Get("/dbs/:id", handlerWrap(getDB))
+	// mux.Get("/dbs/:id/tables", handlerWrap(getDBTables))
+	mux.Get("/dbs/:id/tables/:name", handlerWrap(getDBTable))
+	mux.Post("/dbs/:id/exec", handlerWrap(query))
 
 	http.Handle("/", mux)
-	println("Listening on :9000")
+	log.Println("Listening on :9000")
 	err := http.ListenAndServe(":9000", nil)
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
@@ -74,4 +80,22 @@ func loadTmpl() *template.Template {
 		}
 	}
 	return t
+}
+
+func handlerWrap(h func(http.ResponseWriter, *http.Request)) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		start := time.Now()
+		defer func() { log.Printf("%s %s %s", r.Method, r.URL.Path, time.Now().Sub(start)) }()
+		defer func() {
+			if r := recover(); r != nil {
+				err := fmt.Errorf("%+v", r)
+				log.Println(err)
+				debug.PrintStack()
+				w.Write([]byte(err.Error() + "\n"))
+				w.Write(debug.Stack())
+			}
+		}()
+
+		h(w, r)
+	})
 }

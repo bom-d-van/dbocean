@@ -1,0 +1,27 @@
+@{
+	var info DBInfo
+	var tables []map[string]string
+	var table []map[string]interface{}
+	var data []map[string]interface{}
+}
+
+@raw(Render_tables(info, tables))
+
+<table>
+	<thead>
+		<tr>
+			@for _, column := range table {
+				<th>@column["name"]</th>
+			}
+		</tr>
+	</thead>
+	<tbody>
+		@for _, row := range data {
+			<tr>
+				@for _, column := range row {
+					<td>@column</td>
+				}
+			</tr>
+		}
+	</tbody>
+</table>
