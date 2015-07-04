@@ -4,6 +4,8 @@ package main
 
 import (
 	"database/sql"
+	"flag"
+	"os"
 
 	"github.com/bom-d-van/sqlkungfu"
 
@@ -11,6 +13,18 @@ import (
 )
 
 func main() {
+	var force bool
+	var dev bool
+	flag.BoolVar(&force, "f", false, "recreate database")
+	flag.BoolVar(&dev, "dev", false, "create development data")
+	flag.Parse()
+
+	if force {
+		if err := os.Remove("tmp/dbocean.db"); err != nil {
+			panic(err)
+		}
+	}
+
 	db, err := sql.Open("sqlite3", "tmp/dbocean.db")
 	if err != nil {
 		panic(err)
@@ -22,20 +36,30 @@ func main() {
 
 	sqlkungfu.MustExec(db, `
 		CREATE TABLE dbs (
-			id       int,
-			name     varchar(255),
-			user     varchar(255),
-			password varchar(255),
-			path     varchar(255)
+			id       INTEGER PRIMARY KEY AUTOINCREMENT,
+			name     VARCHAR(255) DEFAULT '',
+			user     VARCHAR(255) DEFAULT '',
+			password VARCHAR(255) DEFAULT '',
+			path     VARCHAR(255) DEFAULT ''
 		);
 	`)
 
 	sqlkungfu.MustExec(db, `
+		ALTER TABLE dbs ADD type varchar(255);
+	`)
+
+	if dev {
+		sqlkungfu.MustExec(db, `
+			INSERT INTO dbs (name, type, path) VALUES ('devdb', 'sqlite3', 'tmp/devdb');
+		`)
+	}
+
+	sqlkungfu.MustExec(db, `
 		CREATE TABLE commands (
-			id        int,
-			content   string,
-			log       string,
-			createdat date
+			id        INTEGER PRIMARY KEY AUTOINCREMENT,
+			content   STRING DEFAULT '',
+			log       STRING DEFAULT '',
+			createdat DATE DEFAULT GETDATE
 		)
 	`)
 }
